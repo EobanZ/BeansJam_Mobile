@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(SphereCollider))]
 public abstract class Projectile : MonoBehaviour {
     public float minImpactRadius = 2f;
     public float maxImpactRadius = 5f;
