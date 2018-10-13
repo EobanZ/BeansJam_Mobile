@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour {
                 Instantiate(BigPrefab, SpawningPosition.position, Quaternion.identity);
                 break;
             case EnemyType.Rotator:
-                
+                Instantiate(RotatorPrefab, SpawningPosition.position, Quaternion.identity);
                 break;
             default:
                 break;

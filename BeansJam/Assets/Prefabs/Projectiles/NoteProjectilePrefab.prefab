@@ -143,6 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minImpactRadius: 3
   maxImpactRadius: 8
+  explosionForce: 0
 --- !u!135 &135641812482470712
 SphereCollider:
   m_ObjectHideFlags: 1

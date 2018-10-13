@@ -14,7 +14,7 @@ public class NoteProjectile : Projectile {
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
         int i = 0;
-        Debug.Log(hitColliders.Length);
+
         while (i < hitColliders.Length)
         {
             var tile = hitColliders[i].gameObject.GetComponent<Tile>();
@@ -25,10 +25,6 @@ public class NoteProjectile : Projectile {
         removeProjectile();
     }
 
-    void shoot()
-    {
-        
-    }
 
     protected override void Shooting()
     {
@@ -43,7 +39,6 @@ public class NoteProjectile : Projectile {
         rb.velocity.Set(0, 0, 0);
         rb.isKinematic = false;
         Vector3 v = calcBallisticVelocityVector(transform.position, new Vector3(Random.Range(0, GameManager.Instance.floorSize*2), 0, Random.Range(0, GameManager.Instance.floorSize*2)), 45);
-        Debug.Log(v);
         rb.AddForce(v.x,v.y,v.z,ForceMode.VelocityChange);
     }
 

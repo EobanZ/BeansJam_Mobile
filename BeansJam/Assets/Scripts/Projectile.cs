@@ -7,6 +7,7 @@ using UnityEngine;
 public abstract class Projectile : MonoBehaviour {
     public float minImpactRadius = 2f;
     public float maxImpactRadius = 5f;
+    public float explosionForce = 0;
     protected Rigidbody rb;
 
 	// Use this for initialization

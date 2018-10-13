@@ -143,6 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minImpactRadius: 20
   maxImpactRadius: 25
+  explosionForce: 0
   speed: 0.64
   dropAfterSeconds: 4
 --- !u!135 &135779448002524298

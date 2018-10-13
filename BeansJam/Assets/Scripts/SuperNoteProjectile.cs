@@ -18,7 +18,6 @@ public class SuperNoteProjectile : Projectile {
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
         int i = 0;
-        Debug.Log(hitColliders.Length);
         while (i < hitColliders.Length)
         {
             var tile = hitColliders[i].gameObject.GetComponent<Tile>();

@@ -13,11 +13,12 @@ public class GameManager : GenericSingletonClass<GameManager> {
     public Tile[,] tiles;
     public GameObject Player;
     public Transform Center;
+    public int itemsNeedetToRepairFloor = 10;
 
     bool gameOver = false;
     public bool GameOver { get { return gameOver; } set { gameOver = value; } }
 
-    public int lifes;
+    public int MaxLifes = 10;
     int currentlifes;
 
     int highScore;
@@ -25,17 +26,23 @@ public class GameManager : GenericSingletonClass<GameManager> {
     int secondsPlayed;
     float multiplier = 1.0f;
     public int pointsPerSecond = 10;
+    int repairItemsCollected = 0;
 
     float timer1 = 0;
 
+    private void Awake()
+    {
+        Player = Instantiate(PlayerPrefab, new Vector3(floorSize, 1, floorSize), Quaternion.identity);
+        
+    }
 
-	void Start () {
-        Player = Instantiate(PlayerPrefab, new Vector3(floorSize, 1 , floorSize ), Quaternion.identity);
+    void Start () {
+
         tiles = floor.Tiles;
-
+        currentlifes = MaxLifes;
         //Display the Booster and jump on the ui
         //Player.GetComponent<PlayerMovement>().GetBoostDelay()
-	}
+    }
 
     public void ApplyDamage(int amount)
     {
@@ -50,14 +57,23 @@ public class GameManager : GenericSingletonClass<GameManager> {
     {
         currentScore += amount;
     }
+
+    public void AddHealth(int amount)
+    {
+        currentlifes++;
+        if (currentlifes > MaxLifes)
+            currentlifes = MaxLifes;
+    }
 	
     
 	
 	void Update () {
+
+     
         if (gameOver)
         {
             //look if score is heiger than highscore
-
+            
             SceneManager.LoadScene(0);
         }
         if (Time.time - timer1 >= 1.0f)
