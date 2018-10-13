@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class GameManager : GenericSingletonClass<GameManager> {
 
     public int floorSize;
@@ -9,7 +11,8 @@ public class GameManager : GenericSingletonClass<GameManager> {
     public Tile[,] tiles;
 
 	void Start () {
-        Instantiate(PlayerPrefab, new Vector3(floorSize / 2, 1 , floorSize / 2), Quaternion.identity);
+        var go = Instantiate(PlayerPrefab, new Vector3(floorSize / 2, 1 , floorSize / 2), Quaternion.identity);
+        //go.GetComponent<CameraFollow>().target = go.transform;
 	}
 	
 	

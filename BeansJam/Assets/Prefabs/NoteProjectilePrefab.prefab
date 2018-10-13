@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30985e7bfba56c64e8546de50267609c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minImpactRadius: 2
-  maxImpactRadius: 5
+  minImpactRadius: 3
+  maxImpactRadius: 8
 --- !u!135 &135641812482470712
 SphereCollider:
   m_ObjectHideFlags: 1

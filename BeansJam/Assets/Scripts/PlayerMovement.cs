@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour {
 
     Rigidbody rb;
     bool isOnGround;
+    bool isJumping;
     float lastJumped;
     float lastBoosted;
 
@@ -21,15 +22,34 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         //rb.maxDepenetrationVelocity = maxSpeed;
 	}
+
+    void ClampPlayer()
+    {
+        transform.position = new Vector3( Mathf.Clamp(transform.position.x,.5f,197),transform.position.y,Mathf.Clamp(transform.position.z, .5f, 197));
+    }
 	
 	
 	void Update () {
+
+        ClampPlayer();
 
         //if (rb.velocity.magnitude >= maxSpeed)
         //rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
         //TODO: Gravity normal wirken lassen
         //rb.AddForce(new Vector3(0, 0, -10));
         isOnGround = Physics.Raycast(transform.position, new Vector3(0, -1, 0), 0.5f);
+        if (isJumping && isOnGround)
+            isJumping = false;
+
+        if (!isJumping && isOnGround)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+            transform.position.Set(transform.position.x, Mathf.Clamp01(transform.position.y), transform.position.z);
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
 
         if(!isOnGround)
         {
@@ -88,7 +108,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void jump()
     {
+        isJumping = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotation;
         rb.AddForce(new Vector3(0, 1, 0) * jumpForce, ForceMode.Acceleration);
+        
     }
 
     void boost()
