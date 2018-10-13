@@ -2,30 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour {
-    public float maxRadius = 5f;
+[RequireComponent(typeof(Rigidbody))]
+public abstract class Projectile : MonoBehaviour {
+    public float minImpactRadius = 2f;
+    public float maxImpactRadius = 5f;
+    protected Rigidbody rb;
 
 	// Use this for initialization
-	void Start () {
-		
+	protected virtual void Start () {
+        rb = GetComponent<Rigidbody>();
 	}
+  
 	
 	// Update is called once per frame
-	void Update () {
-		
+	protected virtual void Update () {
+        Shooting();
 	}
 
     private void OnTriggerEnter(Collider other)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(2,maxRadius));
-        int i = 0;
-        Debug.Log(hitColliders.Length);
-        while (i < hitColliders.Length)
+        if(other.tag == "tile")
         {
-            var tile = hitColliders[i].gameObject.GetComponent<Tile>();
-            if (tile) 
-            tile.Remove();
-            i++;
+            
+            OnTileCollission();
         }
+        if(other.tag == "scooter")
+        {
+            OnPlayerCollision(other);
+        }
+       
     }
+
+ 
+
+    protected abstract void OnPlayerCollision(Collider other);
+
+
+    protected abstract void OnTileCollission();
+
+    protected abstract void Shooting();
+    
 }
