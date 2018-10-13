@@ -25,7 +25,7 @@ public abstract class Projectile : MonoBehaviour {
         if(other.tag == "tile")
         {
             
-            OnTileCollission();
+            OnTileCollission(other);
         }
         if(other.tag == "scooter")
         {
@@ -39,7 +39,7 @@ public abstract class Projectile : MonoBehaviour {
     protected abstract void OnPlayerCollision(Collider other);
 
 
-    protected abstract void OnTileCollission();
+    protected abstract void OnTileCollission(Collider other);
 
     protected abstract void Shooting();
     

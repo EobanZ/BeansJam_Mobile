@@ -31,7 +31,12 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update () {
 
-        ClampPlayer();
+       
+
+        if(transform.position.y <= -2)
+        {
+            GameManager.Instance.GameOver = true;
+        }
 
         //if (rb.velocity.magnitude >= maxSpeed)
         //rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
@@ -122,5 +127,15 @@ public class PlayerMovement : MonoBehaviour {
         rb.velocity.Set(0, 0, 0);
         rb.isKinematic = false;
         rb.AddForce(dir * boostForce, ForceMode.Impulse);
+    }
+
+    public float GetBoostDelay()
+    {
+        return boostDelay;
+    }
+
+    public float GetJumpDelay()
+    {
+        return jumpDelay;
     }
 }

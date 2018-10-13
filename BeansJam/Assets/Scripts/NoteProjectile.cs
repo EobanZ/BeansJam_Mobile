@@ -10,7 +10,7 @@ public class NoteProjectile : Projectile {
         other.GetComponent<Rigidbody>().AddForce(rb.velocity * 100, ForceMode.Impulse);
     }
 
-    protected override void OnTileCollission()
+    protected override void OnTileCollission(Collider other)
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
         int i = 0;

@@ -14,7 +14,7 @@ public class Procetile1 : Projectile {
         base.Update();
     }
 
-    protected override void OnTileCollission()
+    protected override void OnTileCollission(Collider other)
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
         int i = 0;
