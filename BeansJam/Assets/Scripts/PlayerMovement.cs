@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
-
-
-    public float maxSpeed = 10;
-    public float acceleration = 1000;
+public class PlayerMovement : MonoBehaviour
+{
+    public float maxSpeed = 45;
+    public float acceleration = 2;
     public float jumpForce = 10;
     public float boostForce = 35;
     public float jumpDelay = 2;
@@ -14,11 +13,10 @@ public class PlayerMovement : MonoBehaviour {
 
     Rigidbody rb;
     bool isOnGround;
-    bool isJumping;
-    float lastJumped;
     float lastBoosted;
 
-	void Start () {
+	void Start ()
+	{
         rb = GetComponent<Rigidbody>();
         //rb.maxDepenetrationVelocity = maxSpeed;
 	}
@@ -31,9 +29,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update () {
 
-       
 
-        if(transform.position.y <= -2)
+
+        if (transform.position.y <= -2)
         {
             GameManager.Instance.GameOver = true;
         }
@@ -43,10 +41,7 @@ public class PlayerMovement : MonoBehaviour {
         //TODO: Gravity normal wirken lassen
         //rb.AddForce(new Vector3(0, 0, -10));
         isOnGround = Physics.Raycast(transform.position, new Vector3(0, -1, 0), 0.5f);
-        if (isJumping && isOnGround)
-            isJumping = false;
-
-        if (!isJumping && isOnGround)
+        if (isOnGround)
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
             transform.position.Set(transform.position.x, Mathf.Clamp01(transform.position.y), transform.position.z);
@@ -61,10 +56,21 @@ public class PlayerMovement : MonoBehaviour {
             rb.AddForce(new Vector3(0, -10, 0), ForceMode.Acceleration);
         }
 
+	    Vector3 tilt = Quaternion.Euler(90, 0, 0) * Input.acceleration;
+	    rb.AddForce(new Vector3(tilt.x, 0, tilt.z) * acceleration);
+	    rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxSpeed);
+
+	    Vector3 dir = Vector3.zero;
+	    dir.x = -tilt.x;
+        dir.z = -tilt.z;
+	    if (dir.sqrMagnitude > 1)
+	        dir.Normalize();
+
+	    transform.forward = dir;
 
         if (Input.GetKey(KeyCode.W))
         {
-       
+
             rb.AddForce(new Vector3(0, 0, 1)* acceleration * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 180, 0);
                
@@ -87,17 +93,6 @@ public class PlayerMovement : MonoBehaviour {
             rb.AddForce(new Vector3(0, 0, -1) * acceleration * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        if (Input.GetKeyDown(KeyCode.Space)&&isOnGround)
-        {
-            if((Time.time - lastJumped) >= jumpDelay)
-            {
-                lastJumped = Time.time;
-                jump();
-            }
-            
-            
-            
-        }
         if(Input.GetKeyDown(KeyCode.LeftShift)&&isOnGround)
         {
             if ((Time.time - lastBoosted) >= boostDelay)
@@ -109,14 +104,6 @@ public class PlayerMovement : MonoBehaviour {
         }
         //rotate orientation with gyroscope
 
-    }
-
-    void jump()
-    {
-        isJumping = true;
-        rb.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotation;
-        rb.AddForce(new Vector3(0, 1, 0) * jumpForce, ForceMode.Acceleration);
-        
     }
 
     void boost()
