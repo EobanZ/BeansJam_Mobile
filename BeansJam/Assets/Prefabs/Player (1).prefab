@@ -89,7 +89,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: f19ef9ce58c87da4e9724c6b7acd5b42, type: 2}
+  - {fileID: 2100000, guid: 6de07ffa3de8fd644b071ac3606ad521, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -141,8 +141,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5.375, y: 2.5, z: 8.55}
-  m_Center: {x: 0, y: 1.2, z: 0}
+  m_Size: {x: 5.375, y: 2.5, z: 9.76}
+  m_Center: {x: 0, y: 1.2, z: -0.27}
 --- !u!114 &114448373261594790
 MonoBehaviour:
   m_ObjectHideFlags: 1

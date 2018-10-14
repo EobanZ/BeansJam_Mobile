@@ -11,6 +11,7 @@ public class PointItem : MonoBehaviour {
         if(other.tag == "scooter")
         {
             GameManager.Instance.AddToScore(Points);
+            Destroy(gameObject);
         }
     }
 }

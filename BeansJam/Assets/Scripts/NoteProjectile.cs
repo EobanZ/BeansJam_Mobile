@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NoteProjectile : Projectile {
     public int damage = 1;
+    AudioSource audioSource;
 
     protected override void OnPlayerCollision(Collider other)
     {
@@ -56,6 +57,7 @@ public class NoteProjectile : Projectile {
         rb.isKinematic = false;
         Vector3 v = calcBallisticVelocityVector(transform.position, new Vector3(Random.Range(0, GameManager.Instance.floorSize*2), 0, Random.Range(0, GameManager.Instance.floorSize*2)), 45);
         rb.AddForce(v.x,v.y,v.z,ForceMode.VelocityChange);
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -67,7 +69,12 @@ public class NoteProjectile : Projectile {
 
     void removeProjectile()
     {
-        Destroy(gameObject);
+        transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        float r = Random.Range(0.9f, 1.1f);
+        audioSource.pitch = r;
+        audioSource.Play();
+        ExplosionPrefab.SetActive(true);
+        Destroy(gameObject,audioSource.clip.length);
     }
 
     Vector3 calcBallisticVelocityVector(Vector3 source, Vector3 target, float angle)

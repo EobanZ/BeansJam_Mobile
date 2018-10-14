@@ -8,6 +8,7 @@ public class SuperNoteProjectile : Projectile {
     public float dropAfterSeconds = 2;
     float timer;
     public int damage = 4;
+    AudioSource audioSource;
   
     protected override void OnPlayerCollision(Collider other)
     {
@@ -51,17 +52,27 @@ public class SuperNoteProjectile : Projectile {
         destinationPoint = new Vector3(Random.Range(0, GameManager.Instance.floorSize * 2), 20, Random.Range(0, GameManager.Instance.floorSize * 2));
         rb.isKinematic = true;
         timer = Time.time;
+        audioSource = GetComponent<AudioSource>();
 
 	}
 	
 	// Update is called once per frame
 	new void Update () {
         base.Update();
-	}
+        transform.LookAt(GameManager.Instance.Player.transform);
+    }
 
     void removeProjectile()
     {
-        Destroy(gameObject);
+        transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        transform.GetComponent<SphereCollider>().enabled = false;
+        ExplosionPrefab.SetActive(true);
+
+        float r = Random.Range(0.9f, 1.1f);
+        audioSource.pitch = r;
+        audioSource.Play();
+        Destroy(gameObject, audioSource.clip.length);
+   
     }
 
     void Explode()

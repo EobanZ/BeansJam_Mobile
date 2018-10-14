@@ -8,11 +8,13 @@ public abstract class Projectile : MonoBehaviour {
     public float minImpactRadius = 2f;
     public float maxImpactRadius = 5f;
     public float explosionForce = 0;
+    public GameObject ExplosionPrefab;
     protected Rigidbody rb;
 
 	// Use this for initialization
 	protected virtual void Start () {
         rb = GetComponent<Rigidbody>();
+        transform.LookAt(GameManager.Instance.Player.transform);
 	}
   
 	

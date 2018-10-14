@@ -71,29 +71,29 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
 
-            rb.AddForce(new Vector3(0, 0, 1)* acceleration * Time.deltaTime);
+            rb.AddForce(new Vector3(0, 0, 1)* acceleration*2 * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 180, 0);
                
         }
         if (Input.GetKey(KeyCode.D))
         {
 
-            rb.AddForce(new Vector3(1, 0, 0) * acceleration * Time.deltaTime);
+            rb.AddForce(new Vector3(1, 0, 0) * acceleration *2 * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, -90, 0);
         }
         if (Input.GetKey(KeyCode.A))
         {
 
-            rb.AddForce(new Vector3(-1, 0, 0) * acceleration * Time.deltaTime);
+            rb.AddForce(new Vector3(-1, 0, 0) * acceleration *2 * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 90, 0);
         }
         if (Input.GetKey(KeyCode.S))
         {
 
-            rb.AddForce(new Vector3(0, 0, -1) * acceleration * Time.deltaTime);
+            rb.AddForce(new Vector3(0, 0, -1) * acceleration *2 * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        if(Input.GetKeyDown(KeyCode.LeftShift)&&isOnGround)
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
             if ((Time.time - lastBoosted) >= boostDelay)
             {

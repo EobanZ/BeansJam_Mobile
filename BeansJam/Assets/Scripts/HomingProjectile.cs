@@ -10,6 +10,8 @@ public class HomingProjectile : Projectile {
     public float lifeTime = 6f;
     public int damage = 3;
 
+    AudioSource audioSource;
+
     protected override void OnPlayerCollision(Collider other)
     {
         GameManager.Instance.ApplyDamage(damage);
@@ -31,6 +33,7 @@ public class HomingProjectile : Projectile {
         base.Start();
 
         target = GameManager.Instance.Player.transform;
+        audioSource = GetComponent<AudioSource>();
         
 	}
 	
@@ -53,8 +56,14 @@ public class HomingProjectile : Projectile {
 
     void Explode()
     {
-        Destroy(gameObject);
-        //TODO play particle Effect
+        transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+        transform.GetComponent<SphereCollider>().enabled = false;
+        ExplosionPrefab.SetActive(true);
+       
+        float r = Random.Range(0.9f, 1.1f);
+        audioSource.pitch = r;
+        audioSource.Play();
+        Destroy(gameObject, audioSource.clip.length);
 
         float radius = Random.Range(minImpactRadius, maxImpactRadius);
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius );

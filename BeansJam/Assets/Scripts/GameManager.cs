@@ -49,6 +49,8 @@ public class GameManager : GenericSingletonClass<GameManager> {
     public Slider health_slider;
     public TMPro.TMP_Text repaircount_text;
     public Slider repaircount_slider;
+    public GameObject GameOverPanel;
+    public TMPro.TMP_Text highscoreText;
 
     [Space]
     [Header("Spawing Items")]
@@ -60,6 +62,8 @@ public class GameManager : GenericSingletonClass<GameManager> {
 
     private void Awake()
     {
+        Time.timeScale =1 ;
+        AudioListener.pause = false;
         Player = Instantiate(PlayerPrefab, new Vector3(floorSize, 1, floorSize), Quaternion.identity);
         
     }
@@ -74,6 +78,8 @@ public class GameManager : GenericSingletonClass<GameManager> {
         items[0] = RepairItemPrefab;
         items[1] = HealthItemPrefab;
         items[2] = PointsItemPrefab;
+
+        LoadHighscore();
 
         //setup UI
         health_slider.maxValue = MaxLifes;
@@ -113,8 +119,18 @@ public class GameManager : GenericSingletonClass<GameManager> {
         if (gameOver)
         {
             //look if score is heiger than highscore
+            if(highScore < currentScore)
+            {
+                SaveHighscore();
+                highScore = currentScore;
+            }
             
-            SceneManager.LoadScene(0);
+
+            GameOverPanel.SetActive(true);
+            highscoreText.SetText(highScore.ToString());
+
+            Time.timeScale = 0;
+            AudioListener.pause = true;
         }
         if (Time.time - timer1 >= 1.0f)
         {
@@ -167,10 +183,7 @@ public class GameManager : GenericSingletonClass<GameManager> {
 
     void RebuildField()
     {
-        floor.ReplaceField();
-        //Build Second Field while Playing in Coroutiene
-        //without colliders
-        //move the field to the right position and enable collisions
+        StartCoroutine(floor.BuildField());
     
     }
 
@@ -180,17 +193,38 @@ public class GameManager : GenericSingletonClass<GameManager> {
         int posY;
 
         
-        do
-        {
-            posX = Random.Range(0, 100);
-            posY = Random.Range(0, 100);
 
+         posX = Random.Range(0, 100);
+         posY = Random.Range(0, 100);
 
-        } while (!tiles[posX,posY]);
-        Instantiate(items[Mathf.RoundToInt(Random.Range(0, items.Length-1))], new Vector3(posX,3,posY), Quaternion.identity);
+        var rand = Mathf.RoundToInt(Random.Range(0, 3));
+        if (rand >= 3) rand = 0;
+        Instantiate(items[rand], new Vector3(posX,20,posY), Quaternion.identity);
 
         //play sound
 
+    }
+
+    public void LoadHighscore()
+    {
+        highScore = PlayerPrefs.GetInt("highScore", 0);
+
+    }
+
+    public void SaveHighscore()
+    {
+        PlayerPrefs.SetInt("highScore", currentScore);
+        PlayerPrefs.Save();
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
 }
