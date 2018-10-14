@@ -62,12 +62,12 @@ public class HomingProjectile : Projectile {
         while (i < hitColliders.Length)
         {
             var tile = hitColliders[i].gameObject.GetComponent<Tile>();
-            var player = hitColliders[i].gameObject.GetComponent<Rigidbody>();
+            var player = hitColliders[i].gameObject.gameObject.GetComponent<PlayerMovement>();
             if (tile)
                 tile.Remove();
             if (player)
-                player.AddExplosionForce(explosionForce, transform.position, radius);
-            
+                player.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, radius);
+
             i++;
         }
     }

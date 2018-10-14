@@ -14,18 +14,36 @@ public class Enemy : MonoBehaviour {
     public GameObject StandardPrefab;
     public GameObject BigPrefab;
     public GameObject RotatorPrefab;
-    public Transform SpawningPosition;
+    [HideInInspector] public Transform SpawningPosition;
     public float RotateSpeed = 20f;
+    public float Shootintervall = 3;
+    public float MinIntervall = 0.5f;
+    public float rangeAroundIntervall = 2;
+    float randomShootinterval;
 
      public EnemyType type;
 	// Use this for initialization
 	void Start () {
         SpawningPosition = transform.Find("SpawnPosition").transform;
-        SpawnProjectile();
-	}
+
+
+        //SpawnProjectile();
+        NextRandomIntervall();
+        randomShootinterval /= Random.Range(1,3);
+    }
+    
+    void NextRandomIntervall()
+    {
+        randomShootinterval = Random.Range(Shootintervall - rangeAroundIntervall, Shootintervall + rangeAroundIntervall);
+        randomShootinterval = randomShootinterval * (1/GameManager.Instance.Multiplier);
+        if (randomShootinterval < MinIntervall)
+            randomShootinterval = MinIntervall;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        randomShootinterval = randomShootinterval - Time.deltaTime;
         switch (type)
         {
             case EnemyType.Standard:
@@ -44,18 +62,33 @@ public class Enemy : MonoBehaviour {
 
     void UpdateStandard()
     {
-        
+        if (!(randomShootinterval <= 0))
+            return;
+
+        NextRandomIntervall();
+        SpawnProjectile();
+
     }
 
     void UpdateBig()
     {
+        if (!(randomShootinterval <= 0))
+            return;
 
+        NextRandomIntervall();
+        SpawnProjectile();
     }
 
     void UpdateRotator()
     {
         transform.RotateAround(GameManager.Instance.Center.position, Vector3.up, RotateSpeed * Time.deltaTime);
         transform.LookAt(GameManager.Instance.Player.transform.position);
+
+        if (!(randomShootinterval <= 0))
+            return;
+
+        NextRandomIntervall();
+        SpawnProjectile();
     }
 
     [ContextMenu("Spawn Projectiles")]

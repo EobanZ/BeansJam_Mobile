@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour {
         {
             if ((Time.time - lastBoosted) >= boostDelay)
             {
-                lastJumped = Time.time;
+                lastBoosted = Time.time;
                 boost();
             }
       

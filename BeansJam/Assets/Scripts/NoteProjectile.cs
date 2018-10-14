@@ -3,25 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NoteProjectile : Projectile {
+    public int damage = 1;
 
     protected override void OnPlayerCollision(Collider other)
     {
-        removeProjectile();
-        other.GetComponent<Rigidbody>().AddForce(rb.velocity * 100, ForceMode.Impulse);
+        GameManager.Instance.ApplyDamage(damage);
+
+        Explode();
+        //float radius = Random.Range(minImpactRadius, maxImpactRadius);
+        //Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+        //int i = 0;
+        //while (i < hitColliders.Length)
+        //{
+        //    var player = hitColliders[i].gameObject.GetComponent<Rigidbody>();
+        //    if (player)
+        //        player.AddExplosionForce(explosionForce, transform.position, radius);
+
+        //    i++;
+
+        //}
     }
 
     protected override void OnTileCollission(Collider other)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
-        int i = 0;
+        Explode();
 
-        while (i < hitColliders.Length)
-        {
-            var tile = hitColliders[i].gameObject.GetComponent<Tile>();
-            if (tile)
-                tile.Remove();
-            i++;
-        }
+        //Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
+        //int i = 0;
+
+        //while (i < hitColliders.Length)
+        //{
+        //    var tile = hitColliders[i].gameObject.GetComponent<Tile>();
+        //    if (tile)
+        //        tile.Remove();
+        //    i++;
+        //}
         removeProjectile();
     }
 
@@ -67,5 +83,27 @@ public class NoteProjectile : Projectile {
         // calculate velocity
         float velocity = Mathf.Sqrt(distance * Physics.gravity.magnitude / Mathf.Sin(2 * a));
         return velocity * direction.normalized;
+    }
+
+    void Explode()
+    {
+        removeProjectile();
+
+        float radius = Random.Range(minImpactRadius, maxImpactRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            var tile = hitColliders[i].gameObject.GetComponent<Tile>();
+            var player = hitColliders[i].gameObject.GetComponent<PlayerMovement>();
+            if (tile)
+                tile.Remove();
+            if (player)
+            {
+                player.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, radius);
+                GameManager.Instance.ApplyDamage(damage);
+            }               
+            i++;
+        }
     }
 }

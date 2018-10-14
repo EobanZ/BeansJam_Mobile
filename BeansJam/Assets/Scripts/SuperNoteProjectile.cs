@@ -7,25 +7,30 @@ public class SuperNoteProjectile : Projectile {
     public float speed = 0.125f;
     public float dropAfterSeconds = 2;
     float timer;
+    public int damage = 4;
   
     protected override void OnPlayerCollision(Collider other)
     {
-        removeProjectile();
-        other.GetComponent<Rigidbody>().AddForce(rb.velocity * 100, ForceMode.Impulse);
+        Explode();
+
+        //removeProjectile();
+        //other.GetComponent<Rigidbody>().AddForce(rb.velocity * 100, ForceMode.Impulse);
     }
 
     protected override void OnTileCollission(Collider other)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
-        int i = 0;
-        while (i < hitColliders.Length)
-        {
-            var tile = hitColliders[i].gameObject.GetComponent<Tile>();
-            if (tile)
-                tile.Remove();
-            i++;
-        }
-        removeProjectile();
+        Explode();
+
+        //Collider[] hitColliders = Physics.OverlapSphere(transform.position, Random.Range(minImpactRadius, maxImpactRadius));
+        //int i = 0;
+        //while (i < hitColliders.Length)
+        //{
+        //    var tile = hitColliders[i].gameObject.GetComponent<Tile>();
+        //    if (tile)
+        //        tile.Remove();
+        //    i++;
+        //}
+        //removeProjectile();
     }
 
     protected override void Shooting()
@@ -57,5 +62,27 @@ public class SuperNoteProjectile : Projectile {
     void removeProjectile()
     {
         Destroy(gameObject);
+    }
+
+    void Explode()
+    {
+        removeProjectile();
+
+        float radius = Random.Range(minImpactRadius, maxImpactRadius);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            var tile = hitColliders[i].gameObject.GetComponent<Tile>();
+            var player = hitColliders[i].gameObject.GetComponent<PlayerMovement>();
+            if (tile)
+                tile.Remove();
+            if (player)
+            {
+                player.gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, radius);
+                GameManager.Instance.ApplyDamage(damage);
+            }
+            i++;
+        }
     }
 }
